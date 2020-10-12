@@ -1424,3 +1424,93 @@ df999 = data_frame.fillna(999)
 dfnan2 = np.where(df999==999,np.nan,df999)
 
 # %%
+# Introduction to Writing Formulas in Python
+
+## Resources: 
+### https://www.earthdatascience.org/courses/intro-to-earth-data-science/write-efficient-python-code/functions-modular-code/
+### https://365datascience.com/python-functions/
+### https://www.earthdatascience.org/courses/intro-to-earth-data-science/write-efficient-python-code/functions-modular-code/write-functions-in-python/
+### https://www.earthdatascience.org/courses/intro-to-earth-data-science/write-efficient-python-code/functions-modular-code/write-functions-with-multiple-and-optional-parameters-in-python/
+
+## Put function at the top o your script
+# def function_name(parameter(s)=default(s)):
+# 	some code here
+# 	return output
+
+# # Fun with unctions :)
+# x = np.arange(2,11).reshape(3,3)
+# y = 3
+# # round down
+# answer = np.floor(np.divide(x,y))
+# print(answer)
+
+# ^ try as function (notes denom if undefined = 2)
+def get_floor(numer,denom=2):
+	x = numer
+	y = denom
+	print("calculation complete")
+	return np.floor(np.divide(x,y))
+
+# array output
+output1 = get_floor(np.arange(10,20),2)
+print(output1)
+
+# ^ try as function (two types of divides)
+def get_divides(numer,denom=2):
+	x = numer
+	y = denom
+	print("calculation complete")
+	return np.floor(np.divide(x,y)), np.divide(x,y)
+
+#tupple output
+output2 = get_divides(np.arange(10,20),4)
+print(output2) 
+#get each part
+o2a = output2[0]
+o2b = output2[1]
+print(o2a, o2b)
+
+#another way
+output3, output4 = get_divides(np.arange(10,20),4)
+print(output3, output4)
+
+# %%
+# Doc Strings
+# Documenting Functions
+# Use lots of """"
+
+def get_floor_docs(numer,denom=2):
+	""" Function to do floor divide
+
+	This is a function. It divides 
+	two things
+
+	numer -> numerator - an array
+	denom -> denominator - an integer (default = 0)
+	"""
+
+	x = numer
+	y = denom
+	print("calculation complete")
+	return np.floor(np.divide(x,y))
+
+
+help(get_floor_docs)
+
+# %%
+## Warm up 10/08/2020
+# Given the following series of flow values and days Assume that the flow has uncertainty of +/- 25%Come up with a way to visualize this information
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+flow = np.random.randn(100)
+day = range(len(flow))
+
+dy = flow*0.25
+plt.errorbar(day, flow, yerr=dy, fmt='.k');
+
+# other options
+## fill_between
+
+# %%
