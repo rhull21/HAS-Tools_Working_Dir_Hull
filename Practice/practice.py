@@ -1514,3 +1514,200 @@ plt.errorbar(day, flow, yerr=dy, fmt='.k');
 ## fill_between
 
 # %%
+## Warm up 10/15/2020
+
+import numpy as np
+import pandas as pd
+
+def fn(d):
+	''' 
+	pass a numpy array
+	return list of column means
+	'''
+	df = pd.DataFrame(d)
+	mn = []
+	for key, value in df.iteritems():
+		print(key)
+		mn.append(round(value.mean(),2))
+	
+	return(mn)
+
+
+# Given the following dataframe:
+data = np.random.rand(4, 5)
+print(fn(data))
+
+# %%
+## Warm up 10/15/2020
+
+import numpy as np
+import pandas as pd
+
+def fn_2(d):
+	''' 
+	pass a numpy array
+	return list of column means
+	'''
+	mean = data.mean(axis=0)
+	return mean
+
+
+# Given the following dataframe:
+data = np.random.rand(4, 5)
+print(fn_2(data))
+
+#%%
+def simple_mean(input):
+	''' 
+	pass a numpy array
+	return list of column means
+	'''
+	average = np.mean(input)
+	return average
+
+data = np.random.rand(4, 5)
+mn_list = []
+for i in range((data.shape[1])):
+	mn_list.append(simple_mean(data[:,i]))
+
+print(mn_list)
+
+
+# %%
+# 10/15/2020
+# # Timeseries
+
+
+### parse dates makes the datetime column (a string)
+### into a datetime object
+### Fyi the argument in read_table() is ‘index_col=<name>’, so for us <name> would be [‘datetime’]
+# read in data
+data = pd.read_table(filepath, sep='\t', skiprows=30,
+                     names=['agency_cd', 'site_no',
+                            'datetime', 'flow', 'code'],
+                     parse_dates=['datetime']
+                     )
+
+### set datetime object after the fact
+data['datetime'] = pd.to_datetime(data['datetime'])
+data.set_index('datetime')
+
+## grabbing out data based on index / row (loc, iloc)
+# first row
+data.iloc[0]
+
+# first row (by index)
+data.loc['1989-01-01']
+
+# first year
+data.loc['1989']
+
+# grab out just one month of data
+data[data.index.month == 5]
+
+# range of data
+data.loc['1989-01-01':'1989-01-20']
+
+# split up and see components
+data.index.year
+data.index.month
+data.index.day
+data.index.dayofweek
+
+
+# %%
+# 10202020
+# indexing in pandas
+import os
+import numpy as np
+import pandas as pd
+# may need to pip install scikit-learn, not available on conda
+from sklearn.linear_model import LinearRegression
+
+# adjust path as necessary
+filename = 'streamflow_week1.txt'
+filepath = os.path.join('../data', filename)
+print(os.getcwd())
+print(filepath)
+
+# read in data
+data = pd.read_table(filepath, sep='\t', skiprows=30,
+                     names=['agency_cd', 'site_no',
+                            'datetime', 'flow', 'code'],
+                     parse_dates=['datetime'],
+                     index_col='datetime'
+                    
+# January 3-5
+data.iloc[2:5][['flow']]
+data.iloc[2:5,2]
+
+data.loc['1989-01-03':'1989-01-05']
+
+data[(data.index >= '1989-01-03') & (data.index <= '1989-01-05')]
+
+data[(data.index.month == 1) & (data.index.year == 1989) & (data.index.day >= 3) & (data.index.day <= 5)]
+
+data[(data.index == '1989') & (data.index.month == 1)]
+
+# %% 
+# # How to read in data
+
+# Option 1: You have a file locally that you want to read:
+# 1) You need the file location os.path.join)
+# 2) You need to know how the file is formatted so you can read it correctly
+
+# # read in data
+# filename = 'streamflow_week1.txt'
+# filepath = os.path.join('../data', filename)
+# data = pd.read_table(filepath, sep='\t', skiprows=30,
+#                      names=['agency_cd', 'site_no',
+#                             'datetime', 'flow', 'code'],
+#                      parse_dates=['datetime'],
+#                      index_col='datetime'
+# )
+
+# Pandas has many built in readers:
+# https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html
+
+# OPtion 2: Read the data from a URL rather than a local file
+# 1) Know the URL of your data
+# 2) Know the format of your data so you can read it in.
+
+url = "https://waterdata.usgs.gov/nwis/dv?cb_00060=on&format=rdb&site_no=09506000&referred_module=sw&period=&begin_date=1989-01-01&end_date=2020-10-19"
+
+# # Now we can read it with the read_table command
+# data2 = pd.read_table(url, sep='\t', skiprows=30,
+#                      names=['agency_cd', 'site_no',
+#                             'datetime', 'flow', 'code'],
+#                      parse_dates=['datetime'],
+#                      index_col='datetime'
+# )
+# print("data2")
+# data2.head()
+
+site = '09506000'
+start = '1989-01-01'
+end = '2020-10-16'
+url2 = "https://waterdata.usgs.gov/nwis/dv?cb_00060=on" \
+		"&format=rdb&site_no="+site+"&referred_module=sw&" \
+		"period=&begin_date="+start+"&end_date="+end
+data3 = pd.read_table(url, sep='\t', skiprows=30,
+                     names=['agency_cd', 'site_no',
+                            'datetime', 'flow', 'code'],
+                     parse_dates=['datetime'],
+                     index_col='datetime')
+data3.head()
+
+# Option 3: We can generate this URL and get the data
+# using an API, techincally we were already doing this
+
+# API = application programming interface
+# # (Translation - a standard set of approaches/protocols
+# # for working with a given dataset in a predictable way
+# # rules for accessing data
+# # Different datasets have their own APIs)
+
+# # 1) Step 1: see if htere is an API and get the rules
+# # for working with it
+
+# %%
